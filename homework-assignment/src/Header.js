@@ -5,6 +5,9 @@ const Header = () => {
 
     return (
     <div class="w-full">
+
+        {/* menu icon - links to File Frontend screen for the purpose of assignment-2 */}
+
         <div class="py-3 bg-gray-300 flex flex-wrap items-center justify-between w-full px-3">
             <Link to="/file-frontend">
                 <button onClick={() => console.log("menu button pressed.")}>
@@ -13,6 +16,8 @@ const Header = () => {
                     </svg>
                 </button>
             </Link>
+
+            {/* Mail and Profile buttons - both link to Agenda screen for the purpose of assignment-1 */}
             <div class="flex flex-wrap justify-between items-end">
             <Link to="/">
                 <button onClick={() => console.log("email button pressed.")} class="px-3">

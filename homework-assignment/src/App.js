@@ -13,16 +13,12 @@ function App() {
       <Router>
         <Header/>
         <Routes>
+          {/* Agenda is default homescreen, accessed also via mail, profile buttons in this example */}
           <Route exact path="/" element={<Agenda/>} />
+          {/* File frontend is access through menu button in this case */}
           <Route path="/file-frontend" element={<FileFrontend />} />
         </Routes>
       </Router>
-    // <div class="bg-gray-200">
-    //   <div class="p-3">
-    //     <Header/>
-    //     <Agenda/>
-    //   </div>
-    // </div>
   );
 }
 

@@ -1,4 +1,4 @@
-// My first attempt using Fastify, encountered many issues along the way, but getting closer
+// First time using Fastify, encountered many issues along the way. Couldn't manage to fix the PDF error before the deadline, but will try fix it in my own time on Sunday ahead of Monday on-site.
 const fastify = require('fastify')({ logger: true });
 const path = require('path');
 const fs = require('fs').promises;
