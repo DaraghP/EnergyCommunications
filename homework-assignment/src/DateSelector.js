@@ -1,15 +1,14 @@
 import React, {useEffect, useState} from 'react';
 
-const DateSelector = () => {
+const DateSelector = ({activeDate, setActiveDate}) => {
     const windowWidth = window.innerWidth;
-    const [activeDate, setActiveDate] = useState("all");
-    const dates = ['Nov 1st', 'Nov 2nd', 'Nov 3rd', 'Nov 4th', 'Nov 5th', 'Nov 6th', 'Nov 7th', 'Nov 8th', 'Nov 9th', 'Nov 10th', 'Nov 11th','Nov 12th', 'Nov 13th', 'Nov 14th']
+    const dates = ['NOV 1st', 'NOV 2nd', 'NOV 3rd', 'NOV 4th', 'NOV 5th', 'NOV 6th', 'NOV 7th', 'NOV 8th', 'NOV 9th', 'NOV 10th', 'NOV 11th','NOV 12th', 'NOV 13th', 'NOV 14th']
 
-    useEffect(()=> {
-        console.log(String(activeDate).split(" "));
-        console.log(window.innerWidth);
+    // useEffect(()=> {
+    //     console.log(String(activeDate).split(" "));
+    //     console.log(window.innerWidth);
 
-    }, [])
+    // }, [])
 
     function prevDate(date) {
         // console.log(date, " index: ", dates.indexOf(date));
