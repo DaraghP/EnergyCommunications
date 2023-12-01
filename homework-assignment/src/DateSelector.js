@@ -4,14 +4,8 @@ const DateSelector = ({activeDate, setActiveDate}) => {
     const windowWidth = window.innerWidth;
     const dates = ['NOV 1st', 'NOV 2nd', 'NOV 3rd', 'NOV 4th', 'NOV 5th', 'NOV 6th', 'NOV 7th', 'NOV 8th', 'NOV 9th', 'NOV 10th', 'NOV 11th','NOV 12th', 'NOV 13th', 'NOV 14th']
 
-    // useEffect(()=> {
-    //     console.log(String(activeDate).split(" "));
-    //     console.log(window.innerWidth);
-
-    // }, [])
 
     function prevDate(date) {
-        // console.log(date, " index: ", dates.indexOf(date));
         let currIndx = dates.indexOf(date);
         console.log("previous date = ", dates[currIndx-1]);
         if (currIndx === 0){
@@ -39,7 +33,7 @@ const DateSelector = ({activeDate, setActiveDate}) => {
 
     return (
     
-        <div class="h-12 flex">
+        <div class="h-15 flex">
             <button onClick={() => prevDate(activeDate)} class="px-2 border-b border-gray-400">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
