@@ -53,6 +53,12 @@ const Events = ({activeDate}) => {
 
     return (
         <div class="flex flex-col overflow-y-auto">
+            {activeEvents.length === 0 &&
+                <>    
+                    <h1 class="p-5 font-medium">No events.</h1>
+                    <hr class="bg-gray-400 h-0.5"/>
+                </>
+            }
             {activeEvents.map((event) => {
                 return <div class="px-5 py-3">
                             <div>{event.startTime}</div>
