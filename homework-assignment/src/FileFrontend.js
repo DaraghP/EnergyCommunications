@@ -31,10 +31,11 @@ const FileFrontend = () => {
       
       <h2 class="text-xl font-bold mt-4 mb-2">Uploaded PDFs</h2>
       <ul>
+        {/* iterate through files, and display each one with a link to download */}
         {uploadedPDFs.map((file) => (
           <li class="p-5" key={file}>
             {file}
-            <a href={`http://127.0.0.1:5000/download/${file}`} download class="bg-orange-200 p-3 border-blue-500 rounded ml-2">
+            <a href={`http://127.0.0.1:5000/download/${file}`} download class="bg-orange-200 p-1 mt-5 border-blue-500 rounded ml-2">
               Download
             </a>
           </li>

@@ -1,4 +1,4 @@
-// First time using Fastify, encountered many issues along the way. Couldn't manage to fix the PDF error before the deadline, but will try fix it in my own time on Sunday ahead of Monday on-site.
+// Fastify NodeJS Backend API to get, upload and download PDFs
 const fastify = require('fastify')({ logger: true });
 const path = require('path');
 const fs = require('fs').promises;
@@ -10,6 +10,7 @@ const { PDFDocument} = require('pdf-lib');
 const uploadDir = path.join(__dirname, 'uploads');
 
 const fastifyCors = require('@fastify/cors');
+const { createWriteStream } = require('fs');
 
 // Had a CORS issue, this resolved it.
 fastify.register(fastifyCors, {
@@ -18,43 +19,46 @@ fastify.register(fastifyCors, {
 
 // endpoint to upload PDF
 fastify.post('/upload', async (request, reply) => {
+    console.log("request.body:", request.body);
     const { file } = request.body;
     if (!file) {
+        // error if no file provided
       reply.code(400).send({ error: 'No file provided' });
       return;
     }
-    // add numbers at the front of filename to prevent same filename error
-    const originalPath = path.join(__dirname, 'uploads', `${uuidv4()}-${file.filename}`);
-  
+    // add numbers at the end of filename to prevent same filename error
+    const originalPath = path.join(__dirname, 'uploads', `${file.filename.slice(0, -4)}-${uuidv4()}.pdf`);
     try {
-      await fs.writeFile(originalPath, file.file);
+
+        await fs.writeFile(originalPath, file._buf, {encoding: null}, function(error){
+            if(error){
+                console.log("error writing file/...");
+            }
+            console.log("file written successfully");
+        });
   
-      // This is currently showing as empty even when sending non-empty PDFs. (Looking into it.)
       const originalBuffer = await fs.readFile(originalPath);
-      console.log('Original PDF Content:', originalBuffer.toString());
   
       // using pdf-lib to add a page to the PDF
-      const modifiedPath = path.join(__dirname, 'uploads', `${uuidv4()}-modified-${file.filename}`);
+      const newFilePath = path.join(__dirname, 'uploads', `${file.filename.slice(0, -4)}-${uuidv4()}-with-cover.pdf`);
       const pdfDoc = await PDFDocument.create();
       const page = pdfDoc.addPage();
   
       // add page to PDF
       const { width, height } = page.getSize();
       const fontSize = 30;
-      const text = 'random text';
+      const text = 'Cover page... random text..';
       page.drawText(text, { x: width / 2,  y: height / 2, fontSize });
   
-      const originalPdfDoc = await PDFDocument.load(originalBuffer);
-      const [originalPage] = await pdfDoc.copyPages(originalPdfDoc, [0]);
-      pdfDoc.addPage(originalPage);
+      const originalPdf = await PDFDocument.load(originalBuffer);
+
+      // copy each page from original pdf to new pdf
+      const copiedPages = await pdfDoc.copyPages(originalPdf, originalPdf.getPageIndices());
+      copiedPages.forEach((page) => pdfDoc.addPage(page));
   
       // save new combined PDF to new path
-      const modifiedPdfBytes = await pdfDoc.save();
-      await fs.writeFile(modifiedPath, modifiedPdfBytes);
-  
-      // Not working atm
-      const modifiedBuffer = await fs.readFile(modifiedPath);
-      console.log('Modified PDF Content:', modifiedBuffer.toString());
+      const newPDFContent = await pdfDoc.save();
+      await fs.writeFile(newFilePath, newPDFContent);
   
       reply.code(200).send({ success: true });
     } catch (error) {
@@ -78,12 +82,15 @@ fastify.get('/uploaded', async (request, reply) => {
 // endpoint to download a PDF
 fastify.get('/download/:id', async (request, reply) => {
   const { id } = request.params;
-  const filePath = path.join(uploadDir, id + '_extended.pdf');
+  const filePath = path.join(uploadDir, id);
 
   try {
-    const fileExists = await fs.access(filePath);
-    if (fileExists) {
-      reply.sendFile(filePath);
+    const files = await fs.readdir(uploadDir);
+    // if file is in uploads directory, send PDF
+    if (files.includes(path.basename(filePath))) {
+        const stream = await fs.readFile(filePath);
+        reply.send(stream).code(200);
+        console.log("pdf sent.");
     } else {
       reply.code(404).send({ error: 'File not found' });
     }
@@ -100,7 +107,7 @@ const start = async () => {
     fastify.log.info(`Server is listening on ${fastify.server.address().port}`);
   } catch (err) {
     fastify.log.error(err);
-    process.exit(1);
+    // process.exit(1);
   }
 };
 

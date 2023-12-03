@@ -30,7 +30,7 @@ const FileUpload = ({ onUpload }) => {
     // console.log("selectedFiles in handleUpload: ", selectedFiles);
     // console.log("formData before:", formData);
     formData.append('file', selectedFiles[0]);
-    // console.log("formData after:", formData);
+    console.log("formData after:", formData);
 
     try {
       const response = await fetch('http://127.0.0.1:5000/upload', {
